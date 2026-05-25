@@ -1,0 +1,9 @@
+scenario,protocol,pdr_mean,seed
+epoch_first_half,RPL_STANDARD,100.0,20260512
+epoch_second_half,RPL_STANDARD,100.0,20260512
+epoch_first_half,RPL_MQOS,100.0,20260512
+epoch_second_half,RPL_MQOS,100.0,20260512
+epoch_first_half,RPL_AER,100.0,20260512
+epoch_second_half,RPL_AER,100.0,20260512
+epoch_first_half,AER_MQOS,100.0,20260512
+epoch_second_half,AER_MQOS,100.0,20260512

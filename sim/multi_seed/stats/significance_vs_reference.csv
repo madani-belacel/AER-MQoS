@@ -1,0 +1,7 @@
+channel,reference,protocol,n_ref,n_other,mann_whitney_p,significant_0.05
+lossless,RPL_STANDARD,AER_MQOS,8,6,1.0,no
+lossless,RPL_STANDARD,RPL_AER,8,6,1.0,no
+lossless,RPL_STANDARD,RPL_MQOS,8,6,1.0,no
+lossy,RPL_STANDARD,AER_MQOS,9,9,0.507801,no
+lossy,RPL_STANDARD,RPL_AER,9,9,0.894626,no
+lossy,RPL_STANDARD,RPL_MQOS,9,9,0.353837,no

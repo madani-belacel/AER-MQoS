@@ -1,0 +1,41 @@
+﻿# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.blg
+*.bbl
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.toc
+*.lof
+*.lot
+
+# Python
+__pycache__/
+*.py[cod]
+.pydeps/
+.venv/
+venv/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Cooja / simulation outputs (regenerate locally)
+simulations/real/logs/
+COOJA.testlog
+*.testlog
+
+# Contiki build artifacts
+code_source_AER_MQoS/build/
+**/build/sky/
+**/build/cooja/
+
+# Large optional archives
+Section-tex/sim/multi_seed_hybrid_archive/
+
+# Local build staging
+AER-MQoS-release-staging/

@@ -1,0 +1,65 @@
+metric,column,channel,protocol,n,mean,std,ci95_half_width,mean_minus_ci,mean_plus_ci
+PDR (%),pdr_mean,lossless,AER_MQOS,6,100.0,0.0,0.0,100.0,100.0
+PDR (%),pdr_mean,lossless,RPL_AER,6,100.0,0.0,0.0,100.0,100.0
+PDR (%),pdr_mean,lossless,RPL_MQOS,6,100.0,0.0,0.0,100.0,100.0
+PDR (%),pdr_mean,lossless,RPL_STANDARD,8,100.0,0.0,0.0,100.0,100.0
+PDR (%),pdr_mean,lossy,AER_MQOS,9,99.9504,0.0643,0.042,99.9084,99.9925
+PDR (%),pdr_mean,lossy,RPL_AER,9,99.969,0.0931,0.0609,99.9081,100.0298
+PDR (%),pdr_mean,lossy,RPL_MQOS,9,99.9406,0.0611,0.0399,99.9007,99.9805
+PDR (%),pdr_mean,lossy,RPL_STANDARD,9,99.9779,0.1087,0.071,99.9069,100.0489
+Latency mean (ms),latency_ms_mean,lossless,AER_MQOS,6,441.0005,192.3581,153.9185,287.082,594.919
+Latency mean (ms),latency_ms_mean,lossless,RPL_AER,6,440.8032,191.7116,153.4012,287.402,594.2044
+Latency mean (ms),latency_ms_mean,lossless,RPL_MQOS,6,440.6328,191.0621,152.8815,287.7513,593.5144
+Latency mean (ms),latency_ms_mean,lossless,RPL_STANDARD,8,364.837,223.4883,154.8695,209.9675,519.7065
+Latency mean (ms),latency_ms_mean,lossy,AER_MQOS,9,361.006,232.9583,152.1995,208.8065,513.2055
+Latency mean (ms),latency_ms_mean,lossy,RPL_AER,9,360.0499,232.6509,151.9986,208.0513,512.0485
+Latency mean (ms),latency_ms_mean,lossy,RPL_MQOS,9,359.8961,232.8207,152.1096,207.7866,512.0057
+Latency mean (ms),latency_ms_mean,lossy,RPL_STANDARD,9,359.2269,231.8439,151.4713,207.7556,510.6982
+Latency p95 (ms),latency_ms_p95,lossless,AER_MQOS,6,775.1667,287.2458,229.8445,545.3221,1005.0112
+Latency p95 (ms),latency_ms_p95,lossless,RPL_AER,6,774.8333,284.0749,227.3073,547.526,1002.1406
+Latency p95 (ms),latency_ms_p95,lossless,RPL_MQOS,6,774.8333,285.796,228.6844,546.1489,1003.5178
+Latency p95 (ms),latency_ms_p95,lossless,RPL_STANDARD,8,636.5,365.5239,253.2951,383.2049,889.7951
+Latency p95 (ms),latency_ms_p95,lossy,AER_MQOS,9,662.0,375.9302,245.6077,416.3923,907.6077
+Latency p95 (ms),latency_ms_p95,lossy,RPL_AER,9,655.7778,376.8404,246.2024,409.5754,901.9802
+Latency p95 (ms),latency_ms_p95,lossy,RPL_MQOS,9,656.6667,374.5637,244.715,411.9517,901.3816
+Latency p95 (ms),latency_ms_p95,lossy,RPL_STANDARD,9,661.6667,379.667,248.0491,413.6176,909.7157
+NRE proxy,nre_mean_x100,lossless,AER_MQOS,6,76.015,0.0888,0.0711,75.9439,76.0861
+NRE proxy,nre_mean_x100,lossless,RPL_AER,6,76.0298,0.0779,0.0624,75.9675,76.0922
+NRE proxy,nre_mean_x100,lossless,RPL_MQOS,6,76.031,0.078,0.0624,75.9686,76.0934
+NRE proxy,nre_mean_x100,lossless,RPL_STANDARD,8,76.0258,0.0715,0.0495,75.9762,76.0753
+NRE proxy,nre_mean_x100,lossy,AER_MQOS,9,75.9633,0.0582,0.038,75.9253,76.0014
+NRE proxy,nre_mean_x100,lossy,RPL_AER,9,75.9969,0.0703,0.0459,75.951,76.0428
+NRE proxy,nre_mean_x100,lossy,RPL_MQOS,9,76.0176,0.0769,0.0502,75.9673,76.0678
+NRE proxy,nre_mean_x100,lossy,RPL_STANDARD,9,75.9907,0.0994,0.0649,75.9257,76.0556
+PDR class pdr_c0,pdr_c0,lossless,AER_MQOS,6,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c0,pdr_c0,lossless,RPL_AER,6,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c0,pdr_c0,lossless,RPL_MQOS,6,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c0,pdr_c0,lossless,RPL_STANDARD,8,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c0,pdr_c0,lossy,AER_MQOS,9,99.8037,0.3117,0.2036,99.6001,100.0073
+PDR class pdr_c0,pdr_c0,lossy,RPL_AER,9,99.8679,0.284,0.1855,99.6824,100.0534
+PDR class pdr_c0,pdr_c0,lossy,RPL_MQOS,9,99.8573,0.2958,0.1933,99.664,100.0505
+PDR class pdr_c0,pdr_c0,lossy,RPL_STANDARD,9,99.8234,0.292,0.1908,99.6326,100.0142
+PDR class pdr_c1,pdr_c1,lossless,AER_MQOS,6,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c1,pdr_c1,lossless,RPL_AER,6,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c1,pdr_c1,lossless,RPL_MQOS,6,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c1,pdr_c1,lossless,RPL_STANDARD,8,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c1,pdr_c1,lossy,AER_MQOS,9,99.9164,0.1664,0.1087,99.8077,100.0251
+PDR class pdr_c1,pdr_c1,lossy,RPL_AER,9,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c1,pdr_c1,lossy,RPL_MQOS,9,99.9592,0.1225,0.0801,99.8791,100.0392
+PDR class pdr_c1,pdr_c1,lossy,RPL_STANDARD,9,99.9252,0.2245,0.1467,99.7785,100.0718
+PDR class pdr_c2,pdr_c2,lossless,AER_MQOS,6,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c2,pdr_c2,lossless,RPL_AER,6,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c2,pdr_c2,lossless,RPL_MQOS,6,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c2,pdr_c2,lossless,RPL_STANDARD,8,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c2,pdr_c2,lossy,AER_MQOS,9,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c2,pdr_c2,lossy,RPL_AER,9,99.9333,0.1327,0.0867,99.8466,100.02
+PDR class pdr_c2,pdr_c2,lossy,RPL_MQOS,9,99.8664,0.1602,0.1046,99.7617,99.971
+PDR class pdr_c2,pdr_c2,lossy,RPL_STANDARD,9,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c3,pdr_c3,lossless,AER_MQOS,6,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c3,pdr_c3,lossless,RPL_AER,6,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c3,pdr_c3,lossless,RPL_MQOS,6,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c3,pdr_c3,lossless,RPL_STANDARD,8,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c3,pdr_c3,lossy,AER_MQOS,9,99.9711,0.0866,0.0566,99.9146,100.0277
+PDR class pdr_c3,pdr_c3,lossy,RPL_AER,9,99.9698,0.0906,0.0592,99.9106,100.029
+PDR class pdr_c3,pdr_c3,lossy,RPL_MQOS,9,100.0,0.0,0.0,100.0,100.0
+PDR class pdr_c3,pdr_c3,lossy,RPL_STANDARD,9,100.0,0.0,0.0,100.0,100.0
