@@ -1,0 +1,26 @@
+\section{Security and Trust Indicators}
+\label{sec:sec}
+
+Building on the architectural decomposition of Section~\ref{sec:arch}, this section instantiates the trust plane around \emph{what the reference implementation computes today}, how that signal enters the Multi-Criteria Score (MCS), and how adversarial behaviors are \emph{not} evaluated in the committed Cooja campaigns (trust is exercised via link statistics only). All discussion of attacks remains at the threat-model level~\cite{rfc7416,osterlind2006cooja,oikonomou2022contik}.
+
+\subsection{Threat model and scope}
+RFC~7416 provides a systematic threat analysis for RPL, covering internal attackers that manipulate ranks, discard traffic selectively, or amplify control traffic~\cite{rfc7416}. AER-MQoS assumes the same baseline adversary classes at the routing stratum. \textbf{No statement is made that the present Contiki-NG binary defeats these attacks in operational networks:} the contribution is an \emph{indicator} that biases parent ranking toward statistically stable neighbors when link quality degrades.
+
+\subsection{Trust signal derived from link statistics}
+The function \texttt{aer\_trust\_for\_nbr()} maps each candidate RPL neighbor to an eight-bit trust score in $[0,100]$ using only data exposed by upstream \texttt{rpl-lite}: the neighbor's link statistics block returned by \texttt{rpl\_neighbor\_get\_link\_stats()}. When statistics are missing or the smoothed ETX is unusably large, the implementation returns a conservative default (40--45) so that unknown neighbors neither dominate nor are silently treated as fully trusted.
+
+When ETX is available, the score increases with link quality through a deterministic rational mapping based on the internal ETX representation and \texttt{LINK\_STATS\_ETX\_DIVISOR}. The output is intentionally \emph{simple}: it approximates ``historical delivery success'' rather than attempting full behavioral attestation. This design keeps the formula auditable and bounded for constrained nodes.
+
+\subsection{Trust term in the MCS partial score}
+\begingroup\sloppy
+Section~\ref{sec:arch} expresses trust as a risk term $(100-\mathrm{TRUST})$ inside the energy partial score of the MCS. Practically, a neighbor that oscillates or degrades will lower $\mathrm{TRUST}$, increase risk, and raise the partial energy-related cost, steering parent selection away from unstable attachments without introducing parallel routing tables. This keeps trust \emph{on the same decision surface} as energy and QoS indicators, simplifying comparative evaluation across protocol variants.
+\endgroup
+
+\subsection{Positioning relative to trust-centric RPL extensions}
+Recent trust-oriented RPL extensions in the literature combine reputation systems, monitoring windows, or cryptographic handshakes atop RPL signaling~\cite{pishdar2021pccrpl}. AER-MQoS occupies a different point in the design space: it does not implement PCC-RPL or an equivalent reputation protocol; instead, it contributes a \emph{minimal} trust signal suitable for class-1 motes and for Cooja campaigns. The manuscript compares against such work conceptually, not by claiming feature parity.
+
+\subsection{Future attack-injection studies (out of scope here)}
+Scripted Cooja injections (e.g., selective forwarding or rank advertisement anomalies) with fixed attacker sets and observation windows are listed in Section~\ref{sec:validation-plan} as \textbf{planned} work. They are \textbf{not} part of the submitted result panels: Fig.~\ref{fig:eval-temporal-pdr} reports temporal PDR stratification from \texttt{sec.csv}, not an attack scenario.
+
+\subsection{Summary}
+The trust plane of AER-MQoS is intentionally narrow: a deterministic mapping from neighbor link statistics to a bounded trust score, fused into the MCS, evaluated under reproducible Cooja scenarios without adversarial scripts in the committed archive. It complements---rather than replaces---link-layer cryptography and should be read within the Cooja-only evaluation scope of this paper.

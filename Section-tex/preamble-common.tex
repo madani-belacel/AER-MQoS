@@ -1,0 +1,94 @@
+% Shared packages (article + IEEE builds).
+\usepackage{fix-cm}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\IfFileExists{microtype.sty}{%
+  \usepackage{microtype}%
+  \microtypesetup{nopatch={verbatim}}%
+}{}
+\usepackage{listings}
+\lstdefinestyle{csnippet}{%
+  basicstyle=\scriptsize\ttfamily,%
+  breaklines=true,%
+  breakatwhitespace=true,%
+  columns=fullflexible,%
+  keepspaces=true,%
+  showstringspaces=false,%
+  frame=single,%
+  framerule=0.4pt,%
+  xleftmargin=0.5em,%
+  xrightmargin=0.5em,%
+  linewidth=0.96\linewidth,%
+}
+\usepackage{graphicx}
+\IfFileExists{booktabs.sty}{\usepackage{booktabs}}{%
+  \providecommand{\toprule}{\hline}%
+  \providecommand{\midrule}{\hline}%
+  \providecommand{\bottomrule}{\hline}%
+}
+\usepackage{amsmath,amssymb}
+\IfFileExists{caption.sty}{%
+  \usepackage{caption}%
+  \captionsetup{font=small,labelfont=bf}%
+}{}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+
+% Stable protocol / firmware names (no stray hyphenation).
+\newcommand{\AERMQoS}{AER-MQoS}
+\newcommand{\AERMQoSTag}{\texttt{AER\_MQOS}}
+\hyphenation{AER-MQoS RPL-MQoS Contiki-NG}
+
+% IEEE: aertablecol = one column; aertablewide = both columns (dense matrices only).
+\makeatletter
+\@ifclassloaded{IEEEtran}{%
+  \newenvironment{aertablecol}[1][t]{%
+    \begin{table}[#1]\centering\scriptsize
+  }{%
+    \end{table}%
+  }%
+  \newcommand{\AERTableIFont}{\fontsize{6}{7.3}\selectfont}%
+  \newenvironment{aertablecolI}[1][t]{%
+    \begin{table}[#1]\centering\small
+  }{%
+    \end{table}%
+  }%
+  \newenvironment{aertablewide}[1][t]{%
+    \begin{table*}[#1]\centering\scriptsize
+  }{%
+    \end{table*}%
+  }%
+}{%
+  \newenvironment{aertablecol}[1][t]{%
+    \begin{table}[#1]\centering\scriptsize
+  }{%
+    \end{table}%
+  }%
+  \newcommand{\AERTableIFont}{\fontsize{6}{7.3}\selectfont}%
+  \newenvironment{aertablecolI}[1][t]{%
+    \begin{table}[#1]\centering\small
+  }{%
+    \end{table}%
+  }%
+  \newenvironment{aertablewide}[1][t]{%
+    \begin{table}[#1]\centering\scriptsize
+  }{%
+    \end{table}%
+  }%
+}%
+\makeatother
+\usepackage{adjustbox}
+\newcommand{\aertabwrapcol}[1]{\adjustbox{width=\linewidth,center}{#1}}
+\newcommand{\aertabwrap}[1]{\adjustbox{width=\textwidth,center}{#1}}
+\usepackage{url}
+\usepackage[hidelinks,bookmarksopen=true]{hyperref}
+\makeatletter
+\g@addto@macro\UrlBreaks{\do\/\do\_}
+\makeatother
+\providecommand{\doi}[1]{\href{https://doi.org/#1}{\nolinkurl{https://doi.org/#1}}}
+\emergencystretch=2em
+\graphicspath{{Figures/}}
+\input{Figures/CAPTIONS_EN}

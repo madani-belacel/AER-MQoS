@@ -1,0 +1,22 @@
+% IEEE Internet of Things Journal (two-column) — AN-107
+\documentclass[journal]{IEEEtran}
+\makeatletter
+\newcommand{\journal}[1]{\def\@journal{#1}}
+\makeatother
+\journal{IEEE Internet of Things Journal}
+\providecommand{\IEEEcopyrightnotice}{%
+  \copyright{} 2026 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.%
+}
+
+\input{preamble-common.tex}
+\usepackage{cite}
+\usepackage{placeins}
+\bstctlcite{IEEEstyle}
+% Wide floats in two-column mode
+\usepackage{ifpdf}
+\ifpdf
+  \IfFileExists{stfloats.sty}{\usepackage{stfloats}}{}
+\fi
+
+% IEEE uses \IEEEPARstart in some journals; not required here.
+\newcommand{\PaperShortTitle}{AER-MQoS}

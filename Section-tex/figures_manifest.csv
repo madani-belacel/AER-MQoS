@@ -1,0 +1,12 @@
+figure_id,filename,metric,protocols,csv_source,status
+1,Fig_1_Architecture_AER_MQoS.png,architecture_diagram,N/A,manual,ILLUSTRATIVE
+2,Fig_2_DODAG_Path_Levels.png,topology_path_levels,all,manual,ILLUSTRATIVE
+3,Fig_3_Context_Weights_Alpha_Beta_Gamma.pdf,context_gamma_alpha_beta,AER-MQoS,sim/multi_seed/context.csv,MEASURED
+4,Fig_4_PDR_Comparison_4_Protocols.pdf,pdr_aggregate,4-way,sim/multi_seed/pdr.csv,MEASURED
+5,Fig_5_Latency_Comparison_4_Protocols.pdf,latency_e2e,4-way,sim/multi_seed/latency.csv,MEASURED
+6,Fig_6_Interarrival_Gap_By_Traffic_Class.pdf,jitter_per_class,C0-C3,sim/multi_seed/jitter.csv,MEASURED
+7,Fig_7_Energy_Proxy_Comparison.pdf,energy_proxy,4-way,sim/multi_seed/energy.csv,MEASURED
+8,Fig_8_Control_Overhead_RPL_Messages.pdf,rpl_control_overhead,4-way,sim/multi_seed/ctrl.csv,MEASURED
+9,Fig_9_Convergence_Or_Stability_Time.pdf,route_stability,4-way,sim/multi_seed/stab.csv,MEASURED
+10,Fig_10_Temporal_PDR_Stratification.pdf,temporal_pdr_strata,4-way,sim/multi_seed/sec.csv,MEASURED
+11,Fig_11_Learning_Or_Load_Sensitivity.pdf,qlearning_strata,AER-MQoS,sim/multi_seed/learn_or_load.csv,MEASURED

@@ -1,0 +1,17 @@
+channel,success_ratio,scenario,protocol,pdr_mean,seed
+lossless,1.0,epoch_first_half,RPL_STANDARD,100.0,20260602
+lossless,1.0,epoch_second_half,RPL_STANDARD,58.1735,20260602
+lossless,1.0,epoch_first_half,RPL_MQOS,100.0,20260602
+lossless,1.0,epoch_second_half,RPL_MQOS,58.1735,20260602
+lossless,1.0,epoch_first_half,RPL_AER,100.0,20260602
+lossless,1.0,epoch_second_half,RPL_AER,58.1735,20260602
+lossless,1.0,epoch_first_half,AER_MQOS,100.0,20260602
+lossless,1.0,epoch_second_half,AER_MQOS,58.1735,20260602
+lossy,0.85,epoch_first_half,RPL_STANDARD,100.0,20260602
+lossy,0.85,epoch_second_half,RPL_STANDARD,76.6509,20260602
+lossy,0.85,epoch_first_half,RPL_MQOS,100.0,20260602
+lossy,0.85,epoch_second_half,RPL_MQOS,76.6509,20260602
+lossy,0.85,epoch_first_half,RPL_AER,100.0,20260602
+lossy,0.85,epoch_second_half,RPL_AER,76.6509,20260602
+lossy,0.85,epoch_first_half,AER_MQOS,100.0,20260602
+lossy,0.85,epoch_second_half,AER_MQOS,76.6509,20260602

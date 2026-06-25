@@ -1,0 +1,63 @@
+\section{Related Work}
+\label{sec:related}
+
+Related work spans the standard foundations of RPL, objective functions and routing metrics, simulation practice for reproducible LLN studies, and a growing body of research that extends RPL toward traffic differentiation, resilience, and energy awareness. The present manuscript merges two of our prior directions---RPLMQoS (traffic-class-aware ranks and queuing)~\cite{belacel2025rplmqos} and AER-RPL (energy- and link-reliability-aware ranks with harvesting context)~\cite{belacel2025aerrpl}---into one Contiki-NG design evaluated here against both baselines under identical Cooja inputs. Foundational RPL references (RFCs, early surveys) are cited for protocol context; the comparative positioning in Table~\ref{tab:related-compare} maps representative recent work alongside our 2025--2026 integration line.
+
+\subsection{RPL foundations and objective functions}
+RPL organizes IPv6 LLN routers into a DODAG rooted at an \emph{LBR} and separates data-plane forwarding from DAG construction through DAO/DIO signaling~\cite{rfc6550}. Rank increases along the graph, and parents are selected according to an advertised OF together with advertised constraints~\cite{rfc6551}. The Minimum Rank with Hysteresis Objective Function (MRHOF) remains the de facto baseline in many deployments~\cite{rfc6719}. Recent surveys synthesize how objective functions evolved under heterogeneous links, traffic mixes, and QoS goals~\cite{alnajjar2025ofsurvey,kim2017rplsurvey,lamaazi2020rplreview}. Foundational tabular $Q$-learning~\cite{watkins1992qlearning} and learning-augmented RPL lines~\cite{zahedy2024rirpl,wang2024drplcomnet,harishkumar2025deeplightrpl} contextualize the bounded adaptation mechanism in Section~\ref{sec:ql}. AER-MQoS keeps the DODAG abstraction and augments parent selection with an explicit MCS while preserving hysteresis semantics.
+
+\subsection{Traffic differentiation and composite routing metrics}
+Several studies augment RPL ranks with weighted combinations of ETX, delay, jitter, or queueing indicators so that urgent traffic receives preferential routes~\cite{nassar2018qosrpl,solapure2024rplofs,maheshwari2024fuzzyrpl,wakili2024mlrpl}. Dynamic OF selection and fuzzy cross-layer designs further tune QoS--energy trade-offs~\cite{solapure2024rplofs,poornima2025fuzzyclrpl}. Trust-aware extensions fold neighborhood reputation into routing without abandoning the DODAG model~\cite{pishdar2021pccrpl,farooq2022trustrpl,alamiedy2023rplattacks}. AER-MQoS re-expresses class-aware rank shaping using statistics available in upstream \texttt{rpl-lite} and couples it to application-layer WRR queues~\cite{oikonomou2022contik}.
+
+\subsection{Energy-aware routing and harvesting context}
+Energy-aware RPL variants incorporate residual charge, duty-cycle proxies, or predicted replenishment when parents compete on similar link cost~\cite{lamaazi2018energyrpl,ghosh2023cbedrpl,abujassar2024multipathrpl}. Analytical studies quantify how energy-aware rank shaping trades delivery latency against lifetime~\cite{limjoco2018analytical}. AER-MQoS treats energy indicators as MCS inputs updated through a transparent Cooja-oriented process (Section~\ref{sec:energy}). Calibrated joule savings require Energest traces (Section~\ref{sec:validation-plan}).
+
+\subsection{Trust, anomalies, and internal threats}
+RPL's threat model covers rank manipulation, control-plane flooding, and selective forwarding~\cite{rfc7416,alamiedy2023rplattacks}. AER-MQoS contributes a link-stability risk score derived from neighborhood statistics, not behavioral attestation; it biases parent ranking rather than detecting misbehavior cryptographically.
+
+\subsection{Simulation methodology}
+Cooja remains a common baseline for comparing RPL variants before hardware campaigns~\cite{osterlind2006cooja,rfc6687}. This paper adopts Cooja-first methodology with pinned seeds, four firmware tags, and structured METRIC exports. Multi-seed aggregates are reported \textbf{descriptively} over measured Cooja rows (Section~\ref{sec:data-provenance}).
+
+\subsection{Comparative positioning}
+Table~\ref{tab:related-compare} contrasts representative recent lines with AER-MQoS. The goal is not exhaustive catalog coverage but a reviewer-facing map of where this design sits relative to QoS-class routing, energy-aware OFs, trust overlays, and learning-augmented RPL.
+
+\begin{aertablecolI}[t]
+  \caption{Positioning vs.\ representative RPL extensions (2023--2025 publication dates). ``On-wire'' = custom DIO/DAO TLVs in evaluated artifacts.}
+  \label{tab:related-compare}
+\begingroup\footnotesize\sloppy\hfuzz=5pt\setlength{\tabcolsep}{1pt}\renewcommand{\arraystretch}{1.0}%
+\aertabwrapcol{%
+  \begin{tabularx}{\linewidth}{@{}%
+    >{\RaggedRight\arraybackslash}p{1.60cm}%
+    >{\centering\arraybackslash}p{0.70cm}%
+    >{\centering\arraybackslash}p{0.70cm}%
+    >{\centering\arraybackslash}p{0.70cm}%
+    >{\RaggedRight\arraybackslash}p{0.85cm}%
+    >{\RaggedRight\arraybackslash}p{0.65cm}%
+    >{\RaggedRight\arraybackslash}p{1.60cm}%
+    >{\RaggedRight\arraybackslash}p{1.20cm}%
+  @{}}
+    \toprule
+    \textbf{Work} & \textbf{QoS cl.} & \textbf{En.} & \textbf{Tr.} & \textbf{Lrn.} & \textbf{On-wire} & \textbf{Impl.} & \textbf{Eval.} \\
+    \midrule
+    RPL\-MQoS~\cite{belacel2025rplmqos} & Yes & Part. & No & No & Var. & Contiki & Sim. \\
+    Energy OF\cite{lamaazi2018energyrpl,ghosh2023cbedrpl} & No & Yes & No & No & Rare & Contiki/NS-3 & Sim. \\
+    Trust RPL\cite{farooq2022trustrpl,pishdar2021pccrpl} & No & Part. & Yes & No & Var. & Contiki & Sim. \\
+    RI-RPL\cite{zahedy2024rirpl} & No & Yes & No & Q-table & No & NS-2/Contiki & Sim. \\
+    DRL-RPL\cite{wang2024drplcomnet} & Yes & Yes & No & DRL & No & NS-3/IIoT & Sim. \\
+    Fuzzy CL-OF\cite{poornima2025fuzzyclrpl} & Yes & Yes & No & Fuzzy & X-layer & Cooja & Sim.+TB \\
+    ML QoS\cite{wakili2024mlrpl} & Yes & No & Yes & ML & Var. & WSN & Sim. \\
+    \textbf{AER-MQoS} & Yes & Yes & Heur. & Micro.$^{\dagger}$ & \textbf{No} & C-NG/Cooja & Sim.$^{\ddagger}$ \\
+    \bottomrule
+  \end{tabularx}%
+  }%
+  \endgroup
+  \vspace{0.2em}
+  \raggedright
+  $^{\dagger}$Bounded $\gamma$ nudge in firmware; \textbf{not} validated as a performance lever (Section~\ref{sec:ql}).\\
+  $^{\ddagger}$Committed bundle: $N{=}4$ measured Cooja seeds at 1800~s (Section~\ref{sec:data-provenance}).
+\end{aertablecolI}
+
+\subsection{Positioning of AER-MQoS}
+Relative to RPLMQoS~\cite{belacel2025rplmqos}, AER-MQoS adds explicit energy and link-stability terms inside one MCS and documents UDP-edge WRR scheduling. Relative to AER-RPL (journal title \emph{RPL-AER}~\cite{belacel2025aerrpl}), it restores traffic-class semantics and a hysteresis OF tied to a structured MCS. The result is a single design point comparable against both lineages under identical Cooja scenarios~\cite{osterlind2006cooja,oikonomou2022contik}, with measured-campaign boundaries stated up front.
+
+Section~\ref{sec:arch} translates this positioning into a modular Contiki-NG design that separates routing-plane MCS computation from UDP-edge scheduling.

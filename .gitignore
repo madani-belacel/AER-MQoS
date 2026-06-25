@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+.pydeps/
+
+# Build artifacts
+build/
+*.o
+*.d
+*.cooja
+*.map
+*.elf
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# LaTeX
+*.aux
+*.bbl
+*.blg
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.out
+*.toc
+*.run.xml
+Section-tex/main-ieee.pdf
+Section-tex/main-ieee.log
+
+# Temp
+*~
+*.bak
+*.swp

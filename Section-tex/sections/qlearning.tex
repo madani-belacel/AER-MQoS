@@ -1,0 +1,29 @@
+\section{Bounded Table-Driven Nudge on the Context Coefficient (Design Specification)}
+\label{sec:ql}
+
+\noindent\textbf{Evaluation scope.} This section documents the firmware mechanism in \texttt{aer\_rpl\_qlearn.c} for reproducibility. \textbf{No subsection below reports a measured QoS or energy gain from online adaptation.} Appendix~\ref{app:learn} is a logging-path sanity check only; a parameter-frozen firmware build is future work (Section~\ref{sec:validation-plan}).
+
+Sections~\ref{sec:arch}--\ref{sec:energy} fixed the static MCS structure. The learning block is a \emph{minimal, auditable} add-on---not a general-purpose reinforcement engine: fixed state/action sets, integer arithmetic, and a narrow interface to $\gamma$~\cite{osterlind2006cooja,oikonomou2022contik}.
+
+\subsection{Relation to tabular Q-learning}
+Classical Q-learning maintains an action-value function $Q(s,a)$ and updates it from rewards and bootstrapped targets~\cite{watkins1992qlearning}. AER-MQoS adopts the same abstraction at a \emph{microscopic} scale: four states, three actions, and a table of signed eight-bit integers. This is not intended to approximate optimal routing policies; it is a \emph{stability-preserving nudge} on $\gamma$ that reacts to recent transmission success and battery stress.
+
+\subsection{State space}
+States are derived solely from the normalized residual energy indicator (NRE) returned by the energy module (Section~\ref{sec:energy}). The function \texttt{state\_from\_battery()} partitions NRE into four bins: below 25, 25--49, 50--74, and at least 75 on the $[0,100]$ scale. Thus, learning states track \emph{energy headroom}, not topology snapshots, which keeps the state space invariant under DODAG reconfiguration.
+
+\subsection{Action space and effect on \texorpdfstring{$\gamma$}{gamma}}
+There are three discrete actions. After each greedy selection, the code maps actions to calls to \texttt{aer\_rpl\_plus\_ql\_nudge\_gamma}: action~0 applies a $-5$ increment (in fixed-point hundredths), action~1 leaves $\gamma$ unchanged, and action~2 applies $+5$. The underlying routine accumulates these bounded increments but clamps the cumulative bias to $\pm 15$ hundredths so that $\gamma$ cannot be driven to extremes by transient noise. The result is then folded into \texttt{aer\_rpl\_plus\_update\_context()} as described in Section~\ref{sec:arch}. Every action has an immediate, named effect on a logged variable.
+
+\subsection{Reward signal}
+At each learning step, \texttt{aer\_rpl\_ql\_periodic(tx\_ok, tx\_tot)} forms a reward proportional to the ratio of successful transmissions to attempted transmissions over the reporting window. If no attempts occurred, a neutral reward of 50 (on the same $[0,100]$ scale used internally) avoids undefined gradients. If NRE falls below 20, the reward is penalized by 15 units to discourage aggressive QoS bias when the node is critically depleted. The reward therefore couples \emph{application-layer success} with \emph{energy stress}, matching the cross-layer philosophy of the MCS without requiring gradient-based training.
+
+\subsection{Update rule and fixed learning parameters}
+\begingroup\sloppy
+The implementation uses scaled integer arithmetic. A temporal-difference target combines the reward (scaled $\times 2$ in code) with a discounted max over the next state; \texttt{ALPHA\_QL} and \texttt{GAMMA\_DISC} are 30 and 90 (percent units), inherited from the prior RPLMQoS Contiki tuning as fixed-point defaults rather than re-optimized here. Per-action $\gamma$ adjustments of $\pm 5$ (hundredths) with a cumulative clamp of $\pm 15$ limit $\gamma$ movement to a few percent of the scale---enough for traceability without claiming an optimal policy. $Q$ values are clamped to eight bits. We do not claim Bellman convergence. Section~\ref{sec:eval} and Appendix~\ref{app:learn} treat learning as a logging consistency check, not a measured performance gain.
+\endgroup
+
+\subsection{What is not evaluated in this submission}
+The Cooja campaigns underlying Table~\ref{tab:empirical-summary} and Figs.~4--10 do \textbf{not} compare \texttt{AER-MQoS} against a learning-disabled build. Exported \texttt{learning\_on} strata (Appendix~\ref{app:learn}) verify that log labels exist in a single binary; they are \textbf{not} a Q-learning ablation. Hyperparameters are not claimed to transfer to hardware testbeds.
+
+\subsection{Summary}
+AER-MQoS ships a compact Q-table loop that nudges $\gamma$ within hard limits using NRE discretization and coarse TX success signals. The loop is \textbf{specified and traceable in code}; \textbf{its routing benefit is not experimentally validated as a performance lever in the committed Cooja campaigns.}

@@ -1,0 +1,11 @@
+# Contiki-NG-style formatting (reference firmware)
+BasedOnStyle: LLVM
+IndentWidth: 2
+TabWidth: 2
+UseTab: Never
+ColumnLimit: 100
+AllowShortFunctionsOnASingleLine: Empty
+BreakBeforeBraces: Linux
+AlignAfterOpenBracket: Align
+PointerAlignment: Right
+SortIncludes: false

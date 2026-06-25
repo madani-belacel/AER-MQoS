@@ -1,0 +1,66 @@
+% IEEE IoT Journal layout (two-column) — compile from Section-tex/:
+%   pdflatex main-ieee.tex && bibtex main-ieee && pdflatex main-ieee.tex && pdflatex main-ieee.tex
+\input{preamble-ieee}
+\input{metadata}
+
+\begin{document}
+
+\markboth{IEEE Internet of Things Journal}{\PaperShortTitle}
+
+\title{\PaperTitle}
+
+% IEEEtran title-page author/affiliation (metadata synced with metadata.tex).
+\author{%
+  \IEEEauthorblockN{\PaperIEEEAuthorNames}%
+  \IEEEauthorblockA{\IEEEauthorrefmark{1}\PaperAffiliationOneLine\\%
+    Corresponding author e-mail: \href{mailto:\PaperCorrespondingEmail}{\PaperCorrespondingEmail}}%
+  \ifx\AuthorOrcid\empty\else\\[0.75ex]\href{https://orcid.org/\AuthorOrcid}{ORCID~\AuthorOrcid}\fi%
+}
+
+\hypersetup{%
+  pdftitle={\PaperTitle},%
+  pdfauthor={\PaperAuthorsPDF},%
+  pdfkeywords={RPL, IoT, low-power networks, QoS, energy-aware routing, link-reliability routing, network simulation}%
+}
+
+\maketitle
+\IEEEpubid{\begin{minipage}{\textwidth}\IEEEcopyrightnotice\end{minipage}}
+\enlargethispage{-2\baselineskip}
+
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+
+\begin{IEEEkeywords}
+RPL, IoT, low-power networks, QoS, energy-aware routing, link-reliability routing, network simulation.
+\end{IEEEkeywords}
+
+\FloatBarrier
+
+\input{sections/introduction}
+\input{sections/related_work}
+\input{sections/architecture}
+\input{sections/security}
+\input{sections/energy}
+\input{sections/qlearning}
+\input{sections/evaluation}
+\input{sections/conclusion}
+
+\section*{Data Availability}
+The source code, Cooja simulation scenarios, and measured datasets (N=4 independent seeds) used in this study are publicly available in the following GitHub repository:
+\begin{itemize}
+    \item Repository: \url{https://github.com/madani-belacel/AER-MQoS}
+    \item Contains: Contiki-NG firmware, simulation scripts, raw CSV data, and reproduction instructions.
+\end{itemize}
+All data and code necessary to reproduce the figures and tables presented in this paper are included.
+
+\section*{Author contributions}
+\textbf{\PaperAuthorNameShort{}} conceived the integrated protocol design, implemented the Contiki-NG firmware and evaluation scripts, coordinated the Cooja campaigns, and wrote the manuscript.
+
+\FloatBarrier
+\input{sections/appendix}
+
+\FloatBarrier
+\bibliographystyle{IEEEtran}
+\bibliography{bib/references}
+\end{document}

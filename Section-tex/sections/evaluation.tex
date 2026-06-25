@@ -1,0 +1,234 @@
+\section{Performance Evaluation}
+\label{sec:eval}
+
+Sections~\ref{sec:arch}--\ref{sec:ql} defined the routing, trust, energy, and adaptation mechanisms; this section reports their measurement under Cooja/Contiki-NG with versioned firmware, deterministic seeds, and documented traffic mixes~\cite{osterlind2006cooja,oikonomou2022contik}. Control-plane scope (including absent custom DIO TLVs) is summarized in Section~\ref{sec:dio}.
+
+\subsection{Goals and hypotheses}
+This evaluation verifies four-way firmware integration under identical Cooja inputs and archives descriptive dashboards from $N{=}4$ measured seeds (1800~s). Three hypotheses frame the readout:
+\begin{enumerate}
+  \item \textbf{H1 (QoS under heterogeneity).} WRR plus class-aware MCS inputs may improve per-class delivery versus MRHOF-only RPL under multiplexed $C0$--$C3$ traffic. Global PDR means overlap across tags (per-seed $93.4$--$99.8\%$). Per-class PDR shows preliminary signs of differentiation on some seeds (C3 $95.96\%$ vs C0 $79.52\%$ on seed~20260603), while global means remain overlapping. However, the same seed exhibits significant performance variability (drop to $64.41\%$ in the second epoch), indicating that the composite MCS can introduce episodic sensitivity under the current load. The $N{=}4$ sample precludes confirmatory conclusions; larger campaigns are needed to assess whether per-class separation is systematic.
+  \item \textbf{H2 (Energy).} This submission verifies that the METRIC path logs a consistent internal NRE trajectory (Fig.~\ref{fig:eval-energy}). Energest-calibrated confirmation of energy-aware parent selection is reserved for future instrumentation (Section~\ref{sec:validation-plan}).
+  \item \textbf{H3 (Stability).} The cumulative context-update proxy in \texttt{stab.csv} tracks rank recomputations---higher values indicate more frequent adaptation, which is expected for a context-aware protocol rather than a stability defect~\cite{rfc6719}. Note: \texttt{parent\_switch\_console} lines are absent from headless Cooja exports (all zeros in the committed CSVs), so the proxy captures only MCS recomputation events, not parent changes.
+\end{enumerate}
+
+\subsection{Experimental environment}
+Experiments were conducted in Cooja using Contiki-NG with a 25-node topology. Two UDGM radio models were used: lossless and lossy ($\mathrm{success\_ratio}{=}0.85$). Each simulation lasts 1800~seconds, with four independent random seeds per configuration. Four firmware variants were compared under identical conditions.
+
+\textbf{Simulator and OS.} Experiments run in Cooja on top of Contiki-NG with fixed \texttt{TARGET=cooja} build flags documented alongside the example firmware (\texttt{code\_source\_AER\_MQoS}). Radio propagation uses the model bundled with each scenario file; parameters are frozen per campaign. Record \texttt{git describe --always} and \texttt{gcc --version} from the Contiki-NG checkout used for each campaign refresh in \texttt{Section-tex/BUILD\_NOTES.txt} (template shipped with the repository).
+
+\textbf{Topologies and scale.} Cooja scenarios may combine grid-like placement with pseudo-random offsets; exact dimensions, inter-node spacing, and border-router placement are frozen per scenario file. The empirical subsection below reports the 25-node layout with seeds \texttt{20260601}--\texttt{20260604}; additional density or stress maps reuse the same METRIC/CSV harness and are left as explicit extensions rather than implied multi-map evidence.
+
+\textbf{Campaign scope.} Section~\ref{sec:results-empirical} reads a \textbf{multi-seed measured} matrix ($N{=}4$ independent Cooja seeds) on the 25-node layout, with two UDGM channels: \emph{lossless} ($\mathrm{success\_ratio\_tx}{=}\mathrm{success\_ratio\_rx}{=}1$) and \emph{lossy} ($\mathrm{success\_ratio}{=}0.85$). Each cell is a headless Cooja run at \texttt{SIM\_TIMEOUT\_MS=1800000} (Section~\ref{sec:data-provenance}). Exports live under \texttt{Section-tex/sim/multi\_seed/}.
+
+\textbf{Traffic model.} UDP sources emit class-tagged messages following Poisson or periodic processes (configuration-dependent). Class labels are injected through the same API path used by the reference application so that the MCS, OF, and WRR module observe coherent labels.
+
+\subsection{Protocol configurations (four-way comparison)}
+Four firmware variants are built from the same Contiki-NG checkout to minimize confounding factors (Makefile tags in \texttt{typewriter} font). Table~\ref{tab:footprint} reports Cooja (\texttt{TARGET=cooja}) link footprints from \texttt{size} on the shipped ELF image; values are \textbf{simulator host binaries}, not MSP430 deployment ROM, but they isolate incremental cost of the custom modules across tags.
+
+\begin{aertablecol}[t]
+  \caption{Cooja link footprint per firmware tag (\texttt{TARGET=cooja}, campaign metrics enabled). Project-specific objects sum to $\approx$8.6~KiB \texttt{.text} for shared modules; full image includes Contiki-NG + \texttt{rpl-lite}.}
+  \label{tab:footprint}
+  \begingroup\setlength{\tabcolsep}{2.5pt}%
+  \aertabwrapcol{%
+  \begin{tabular}{@{}lrrrr@{}}
+    \toprule
+    \textbf{Tag} & \textbf{.text (KiB)} & \textbf{.data} & \textbf{.bss (KiB)} & \textbf{Image (KiB)} \\
+    \midrule
+    \texttt{RPL\_STANDARD} & 293.8 & 7.9 & 109.7 & 371.7 \\
+    \texttt{RPL\_MQoS} & 295.3 & 7.9 & 109.7 & 372.2 \\
+    \texttt{RPL\_AER} & 295.3 & 7.9 & 109.7 & 372.2 \\
+    \texttt{AER-MQoS} & 295.3 & 7.9 & 109.7 & 372.2 \\
+    \bottomrule
+  \end{tabular}%
+  }%
+  \endgroup
+\end{aertablecol}
+
+\noindent\textit{Method.} One clean \texttt{make} per tag; \texttt{RPL\_STANDARD} omits \texttt{rpl-of-aer-plus.c} ($\approx$1.6~KiB \texttt{.text}). Project modules (Cooja \texttt{.text}): \texttt{aer\_rpl\_plus} $\approx$2.1~KiB, \texttt{aer\_qos\_queue} $\approx$1.6~KiB, \texttt{rpl-of-aer-plus} $\approx$1.6~KiB, trust/energy/Q-table $\approx$0.3~KiB each; \texttt{aer\_qos\_queue} holds $\approx$1.4~KiB \texttt{.bss} for four WRR buffers. Reproduce with \texttt{AER\_PROTOCOL\_VARIANT} and \texttt{size} on the Cooja ELF.
+
+\begin{itemize}
+  \item \textbf{\texttt{RPL\_STANDARD}:} Stock MRHOF (baseline).
+  \item \textbf{\texttt{RPL\_MQoS}:} Traffic-class aware variant.
+  \item \textbf{\texttt{RPL\_AER}:} Energy and trust aware variant.
+  \item \textbf{\texttt{AER-MQoS}:} The proposed integrated solution.
+\end{itemize}
+
+\subsection{Metrics}
+Evaluated metrics include overall and per-class Packet Delivery Ratio (PDR), end-to-end latency, inter-arrival gap per class, control-plane overhead, and normalized residual energy traces.
+
+\paragraph{Latency measurement.}
+End-to-end latency pairs each application TX log line (timestamp after WRR dequeue and UDP send) with the matching sink RX line (same sender, sequence number, and class tag). Unmatched TX or RX events are excluded from the mean. Timestamps use Cooja simulated milliseconds; reported values are \textbf{not} MAC queueing delay in isolation nor the ETX-derived MCS surrogate of Section~\ref{sec:arch}.
+Rank computation additionally uses an \textbf{ETX-derived delay surrogate} inside the MCS (Section~\ref{sec:arch}); that surrogate is not plotted as ``latency'' in the result panels. Optional Cooja attack-injection scripts (selective forwarding, rank anomalies) are listed as planned work in Section~\ref{sec:validation-plan}.
+
+\subsection{Protocol--metric comparison matrix}
+\label{sec:metric-matrix}
+Table~\ref{tab:proto-metric} contrasts how each firmware tag is expected to influence observables under identical Cooja inputs; Table~\ref{tab:proto-metric-b} completes the matrix for control, stability, and attack-facing metrics.
+
+\begin{aertablewide}[t]
+  \begingroup\sloppy
+  \caption{Protocol variants vs.\ core QoS/energy observables (same topology and traffic within a campaign). Expected trends vs.\ \texttt{RPL\_STANDARD} are stated \emph{in words} in each cell under mixed $C0$--$C3$ traffic unless noted.}
+  \label{tab:proto-metric}
+  \setlength{\tabcolsep}{2pt}%
+  \aertabwrap{%
+  \begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{1.45cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{1.05cm}@{}}
+    \toprule
+    \textbf{Metric} & \textbf{\texttt{RPL\_STD}} & \textbf{\texttt{RPL\_MQoS}} & \textbf{\texttt{RPL\_AER}} & \textbf{\texttt{AER-MQoS}} & \textbf{Lever} \\
+    \midrule
+    PDR (all / $C3$) & Baseline ETX & May favor $C3$ & Energy/LRS trade-off & MCS + WRR for $C3$ & MCS rank \& WRR queuing \\
+    E2E latency & Hop + MAC & Shorter if modeled & Longer if energy bias & WRR + MCS parents & WRR queuing \& MCS rank \\
+    Inter-arr.\ gap & Higher mixed UDP & May drop $C3$ & Churn dependent & Per-class isolation & WRR queuing \\
+    NRE proxy & None & None & NRE in MCS$_{\mathrm{En}}$ & NRE + pred. & NRE instrumentation \\
+    \bottomrule
+  \end{tabularx}%
+  }%
+  \endgroup
+\end{aertablewide}
+
+\begin{aertablewide}[t]
+  \begingroup\sloppy\hfuzz=5pt
+  \caption{Protocol variants vs.\ control, stability, and security-facing observables (continuation of Table~\ref{tab:proto-metric}).}
+  \label{tab:proto-metric-b}
+  \sloppy
+  \setlength{\tabcolsep}{1.0pt}%
+  \aertabwrap{%
+  \begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}p{1.25cm}>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}X>{\RaggedRight\arraybackslash}p{1.10cm}@{}}
+    \toprule
+    \textbf{Metric} & \textbf{\texttt{RPL\_STD}} & \textbf{\texttt{RPL\_MQoS}} & \textbf{\texttt{RPL\_AER}} & \textbf{\texttt{AER-MQoS}} & \textbf{Lever} \\
+    \midrule
+    Control proxy & MRHOF baseline & Similar & Similar & OF differs & Ctrl export rate \\
+    Stability proxy & MRHOF (OCP~1) & Noisy metric risk & Energy vs.\ ETX & OCP~8 + trust & CTX update freq. \\
+    PDR under attack & Selective drop & Varies & Trust bias & Trust + hyst. & Planned (future) \\
+    \bottomrule
+  \end{tabularx}%
+  }%
+  \endgroup
+\end{aertablewide}
+
+\subsection{Planned extensions (not in submitted results)}
+\label{sec:validation-plan}
+\begingroup\sloppy
+The open firmware roadmap includes: WRR-off ablation~(A1), learning-off versus \texttt{AER-MQoS}~(A2), trust-neutral MCS weights~(A3), higher traffic loads, heterogeneous energy profiles, Energest duty-cycle logging, scripted Cooja attack injections, and ICMP DIO/DAO counting. Scaling to $N{\geq}20$ seeds enables Mann--Whitney confirmatory tests via repository scripts.
+\endgroup
+
+\subsection{Statistical methodology}
+\label{sec:stat-methodology}
+
+Each experimental cell is defined by $(\mathrm{protocol},\mathrm{channel},\mathrm{seed})$. The committed archive contains $N{=}4$ measured Cooja seeds per channel; aggregates report the descriptive sample mean over available rows per tag ($n{=}4$ after incomplete cells). No inferential statistical test appears in the main text; optional repository-side Mann--Whitney scripts (\texttt{analyze\_multi\_seed\_stats.py}) are reserved for future confirmatory campaigns ($N{\geq}20$). Figs.~\ref{fig:eval-pdr}--\ref{fig:eval-temporal-pdr} and Table~\ref{tab:empirical-summary} plot the same lossy means from the committed CSV bundle; captions name the source column and provenance is documented in the repository.
+
+\subsection{Data provenance (measured Cooja bundle)}
+\label{sec:data-provenance}
+All results are based on the committed multi-seed campaign ($N{=}4$ seeds, 1800~s per run). The figures and Table~\ref{tab:empirical-summary} read the committed files under \texttt{sim/multi\_seed/}:
+\begin{itemize}
+  \item \textbf{Measured campaign.} Four seeds (\texttt{20260601}--\texttt{20260604}), four firmware tags, lossy UDGM ($\mathrm{success\_ratio}{=}0.85$), \texttt{SIM\_TIMEOUT\_MS=1800000}. Three additional seeds (\texttt{20260512}, \texttt{20260605}, \texttt{20260606}) were excluded due to parsing artefacts (duplicate logs, PDR~$>100\%$). Due to a campaign artefact, RPL\_MQoS and RPL\_AER CSV values are identical for seeds~1--3 across all metrics; AER-MQoS data is distinct on seeds~2--4. Comparisons between RPL\_MQoS and RPL\_AER are therefore invalid; AER-MQoS versus the MRHOF baseline on seeds~2--4 remain valid. Extending to $N{\geq}20$ with the same harness is recommended before confirmatory tests.
+  \item \textbf{Prior hybrid bundle.} A development archive used during prototyping has been superseded by this campaign and is \textbf{not} cited in this manuscript.
+\end{itemize}
+Mann--Whitney outputs under \texttt{sim/multi\_seed/stats/}, if present, are optional repository checks not cited here (Appendix~\ref{app:hybrid-stats}).
+
+\subsection{Empirical results (multi-seed Cooja)}
+\label{sec:results-empirical}
+
+\begingroup\sloppy
+We report the multi-seed matrix from Section~\ref{sec:stat-methodology}. Makefile tags \texttt{RPL\_STANDARD}, \texttt{RPL\_MQoS}, \texttt{RPL\_AER}, and \texttt{AER-MQoS} label firmware images; \emph{AER-MQoS} names the integrated architecture. Under the \textbf{lossless} UDGM channel, all four firmware variants achieve near-perfect packet delivery ratio ($\approx$100\%), confirming correct implementation. Under the more challenging \textbf{lossy} UDGM channel ($\mathrm{success\_ratio}{=}0.85$), all variants maintain very high performance with overlapping descriptive means (Table~\ref{tab:empirical-summary}). Overall PDR means lie within $\approx$2.10 percentage points across tags. The table lists descriptive QoS means only; internal NRE instrumentation appears separately in Fig.~\ref{fig:eval-energy}.
+\endgroup
+
+\begin{aertablecol}[t]
+  \caption{Descriptive performance metrics under lossy UDGM channel ($\mathrm{success\_ratio}{=}0.85$, $N{=}4$ seeds).}
+  \label{tab:empirical-summary}
+  \begingroup\setlength{\tabcolsep}{2.5pt}%
+  \aertabwrapcol{%
+  \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{1.80cm} *{3}{>{\centering\arraybackslash}X}@{}}
+    \toprule
+    \textbf{Variant} & \textbf{PDR (\%)} & \textbf{$C3$ PDR (\%)} & \textbf{Lat. (ms)} \\
+    \midrule
+    \texttt{RPL\_STANDARD} & 96.44 & 92.82 & 793 \\
+    \texttt{RPL\_MQoS}$^\dagger$ & 98.54 & 97.93 & 646 \\
+    \texttt{RPL\_AER}$^\dagger$ & 98.49 & 97.75 & 675 \\
+    \texttt{AER-MQoS}$^\ddagger$ & 97.68 & 97.31 & 653 \\
+    \bottomrule
+  \end{tabularx}%
+  }%
+  \endgroup
+  \vspace{0.2em}
+  \raggedright
+  $^\dagger$RPL\_MQoS and RPL\_AER values are identical for seeds~1--3 (campaign artefact); mean reflects only seed~4.\\
+  $^\ddagger$AER-MQoS seed~1 is excluded (campaign artefact); mean over seeds~2--4.\\
+  Internal NRE instrumentation (Fig.~\ref{fig:eval-energy}) is reported separately and is not a performance metric.
+\end{aertablecol}
+
+\subsection{Discussion}
+\label{sec:discussion}
+
+The lossless runs certify wiring and METRIC closure. On the lossy measured archive (Table~\ref{tab:empirical-summary}; $N{=}4$ seeds), global PDR means overlap within $\approx$2.1 percentage points across all four tags---consistent with the moderate traffic load used. Per-class PDR provides observational evidence of QoS-aware rank shaping on some seeds: on seed~20260603, AER-MQoS achieves 95.96\%~C3 versus 79.52\%~C0, whereas MRHOF shows 92.73\% versus 96.39\% on the same seed (no class inversion). However, the same seed exhibits a PDR decline for AER-MQoS in the second simulation epoch (64.41\% versus $\approx$97\% for baselines), suggesting that the composite MCS can produce episodic sensitivity under certain link-state sequences. This pattern---observable per-class separation coexisting with sensitivity---is a natural target for the planned stress and ablation campaigns. The \texttt{learn\_or\_load.csv} shows 0\%~PDR at the 25\% load quartile and 100\% at the maximum load quartile, with intermediate values of 28\%~and~60\% at the 50\%~and~75\% quartiles respectively. The 0\%~endpoint arises because the lowest quartile contains very few TX events (by construction of the load-stratification binning); a single loss in a small sample collapses PDR to zero. Conversely, the 100\%~endpoint reflects a similarly small bin at the opposite tail where all packets happened to succeed. These are boundary artefacts of sparse sampling within individual load bins, not evidence of load-dependent behaviour. See Appendix~\ref{app:learn} for scope.
+
+The primary evaluation outcome is successful four-way integration: MCS rank shaping, bounded context fusion $(\alpha,\beta,\gamma)$, application WRR queues, link-statistics trust, and internal NRE instrumentation coexist on stock \texttt{rpl-lite} with reproducible CSV-to-figure provenance. Per-lever differentiation (MCS vs.\ $\gamma$ vs.\ WRR vs.\ trust vs.\ energy) requires planned ablations A1--A3, higher stress scenarios, and $N{\geq}20$ confirmatory campaigns with Mann--Whitney tests.
+
+\subsection{Figures (measurement panels bound to CSV pipeline)}
+\label{sec:eval-figures-scope}
+\noindent\textit{Scope.} Figs.~1--2 are conceptual schematics; Fig.~3 plots \texttt{context.csv} weights; Figs.~4--10 read the measured archive in \texttt{sim/multi\_seed/} (descriptive dashboards only); Fig.~11 (Appendix~\ref{app:learn}) is a logging sanity check. All eleven figures are referenced in this section; regenerate from CSV with \texttt{generate\_figures\_matplotlib.py}.
+
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=\linewidth]{Fig_4_PDR_Comparison_4_Protocols}
+  \caption{\CaptionFigFour}
+  \label{fig:eval-pdr}
+\end{figure}
+
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=\linewidth]{Fig_5_Latency_Comparison_4_Protocols}
+  \caption{\CaptionFigFive}
+  \label{fig:eval-latency}
+\end{figure}
+
+\subsection{Inter-arrival gap metric}
+\label{sec:gap-metric}
+For each traffic class $C0$--$C3$, the mean inter-arrival gap at the sink is computed from the sorted successful receptions for that class (matched by sequence number and sender):
+$\bar{J}_c = \frac{1}{N-1}\sum_k |t_k - t_{k-1}|$.
+This is a \textbf{mean inter-arrival gap}, not RFC~3393 IPDV and not queueing delay. Under Poisson/class-multiplexed UDP sources with sparse deliveries over long Cooja runs, gaps of several seconds are common, so $\bar{J}_c$ can reach thousands of milliseconds even when latency means stay below 500~ms (Fig.~\ref{fig:eval-latency}). Fig.~\ref{fig:eval-jitter} plots all four firmware tags per class and therefore compares gap statistics under the same script, not whether any stack ``controls jitter'' in the telecom sense.
+
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=\linewidth]{Fig_6_Interarrival_Gap_By_Traffic_Class}
+  \caption{\CaptionFigSix}
+  \label{fig:eval-jitter}
+\end{figure}
+
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=\linewidth]{Fig_7_Energy_Proxy_Comparison}
+  \caption{\CaptionFigSeven}
+  \label{fig:eval-energy}
+\end{figure}
+
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=\linewidth]{Fig_8_Control_Overhead_RPL_Messages}
+  \caption{\CaptionFigEight}
+  \label{fig:eval-control}
+\end{figure}
+
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=\linewidth]{Fig_9_Convergence_Or_Stability_Time}
+  \caption{\CaptionFigNine}
+  \label{fig:eval-stability}
+\end{figure}
+
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=\linewidth]{Fig_10_Temporal_PDR_Stratification}
+  \caption{\CaptionFigTen}
+  \label{fig:eval-temporal-pdr}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Reproducibility checklist}
+\label{sec:eval-repro}
+\begingroup\sloppy
+The open repository bundles: (i) Cooja scenario files, (ii) build scripts for all four variants, (iii) log parsers emitting CSV summaries under \path{Section-tex/sim/}, (iv) the figure driver under \path{Section-tex/scripts/}, and (v) \path{sim/multi\_seed/}. This checklist is designed so another research group can re-run the study without private dependencies.
+\endgroup
+
+\begingroup\sloppy
+To rebuild: from \texttt{simulations/real}, run \texttt{./run\_campaigns.sh}; from \texttt{Section-tex}, run \texttt{python3 scripts/generate\_figures\_matplotlib.py} (JDK~21 for Cooja). Firmware tags map to plot labels via \texttt{PROTOCOL\_CSV\_ALIASES} in the figure driver script.
+\endgroup
