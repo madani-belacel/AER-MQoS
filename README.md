@@ -2,42 +2,42 @@
 
 **Adaptive Energy-aware Multi-Objective QoS Routing for RPL in Low-Power IoT Networks**
 
-**Version officielle : v1.0**  
-[📦 Télécharger la Release](https://github.com/madani-belacel/AER-MQoS/releases/tag/v1.0)
+**Official Release: v1.0**  
+[📦 Download Release v1.0](https://github.com/madani-belacel/AER-MQoS/releases/tag/v1.0)
 
 ---
 
-## À propos du projet
+## About the Project
 
-Ce dépôt contient le **package de reproduction** complet de l'article :
+This repository contains the **full replication package** for the paper:
 
 > **AER-MQoS: A Context-Aware Multi-Objective RPL Extension for QoS-Aware, Energy-Aware, and Link-Reliability-Informed Routing in Low-Power IoT Networks**
 
-## Fonctionnalités principales
+## Key Features
 
-- Score Multi-Critères adaptatif (MCS) combinant QoS, Énergie et Confiance
-- Fonction Objectif RPL personnalisée (OCP 8)
-- Ordonnancement WRR par classe de trafic (C0 à C3)
-- Modèle d’énergie résiduelle (NRE) avec prédiction
-- Mécanisme léger de Q-learning pour l’adaptation contextuelle
-- Scripts complets de campagnes Cooja multi-seed
+- Adaptive Multi-Criteria Score (MCS) combining QoS, Energy, and Trust
+- Custom RPL Objective Function (OCP 8)
+- Per-traffic-class Weighted Round Robin (WRR) queuing (C0–C3)
+- Residual Energy (NRE) model with moving-average prediction
+- Lightweight Q-learning for context adaptation
+- Complete Cooja simulation campaigns (multi-seed)
 
-## Structure du dépôt
+## Repository Structure
 AER-MQoS/
-├── code_source_AER_MQoS/     # Code source Contiki-NG
-├── simulations/              # Scénarios Cooja + scripts
-├── Section-tex/              # Sources LaTeX + figures
-├── scripts/                  # Scripts de build et analyse
-├── INSTALL.md                # Instructions de reproduction
-├── README.md                 # (ce fichier)
+├── code_source_AER_MQoS/     # Contiki-NG firmware source
+├── simulations/              # Cooja scenarios and campaign scripts
+├── Section-tex/              # LaTeX sources and figures
+├── scripts/                  # Build and analysis scripts
+├── INSTALL.md                # Full reproduction instructions
+├── README.md                 # (this file)
 └── LICENSE
-text## Comment reproduire les résultats
+text## How to Reproduce
 
-Consultez le fichier [`INSTALL.md`](INSTALL.md) pour les instructions détaillées :
-- Compilation du firmware
-- Lancement des campagnes de simulation
-- Génération des figures et tableaux
-- Analyse statistique
+Please refer to [`INSTALL.md`](INSTALL.md) for detailed instructions:
+- Firmware compilation
+- Running multi-seed Cooja campaigns
+- Generating figures and tables
+- Statistical analysis
 
 ## Citation
 
@@ -49,5 +49,5 @@ Consultez le fichier [`INSTALL.md`](INSTALL.md) pour les instructions détaillé
   publisher    = {GitHub},
   url          = {https://github.com/madani-belacel/AER-MQoS}
 }
-Licence
-Ce projet est distribué sous licence MIT — voir le fichier LICENSE.
+License
+This project is licensed under the MIT License — see the LICENSE file for details.
