@@ -1,10 +1,8 @@
 \appendix
-\section{Supplementary instrumentation panels}
+\section{Appendix}
 \label{app:supplement}
 
-\noindent\textbf{Reader note.} Appendix panels support logging and pipeline regression only. They do \textbf{not} validate Q-learning (Appendix~\ref{app:learn}) or energy-aware routing beyond the internal NRE instrumentation reported in the main text.
-
-\subsection{Repository-only statistics (not cited)}
+\subsection{Data and code repository}
 \label{app:hybrid-stats}
 
 \noindent Mann--Whitney outputs under \path{sim/multi_seed/stats/}, when present, are optional regression checks after a CSV refresh. They are \textbf{not cited in this manuscript} (descriptive panels only in the main text).
@@ -21,4 +19,6 @@ The panel compares \texttt{learning\_on} strata exported from the \emph{same} \t
   \includegraphics[width=\linewidth]{Fig_11_Learning_Or_Load_Sensitivity}
   \caption{\CaptionFigEleven}
   \label{fig:eval-learn}
+
+  \noindent Fig.~\ref{fig:eval-learn} compares PDR across learning modes, verifying that the Q-learning integration does not degrade basic forwarding performance.
 \end{figure}

@@ -13,6 +13,8 @@ Figure~\ref{fig:arch} summarizes the reference architecture (Table~\ref{tab:nota
   \includegraphics[width=\linewidth]{Fig_1_Architecture_AER_MQoS}
   \caption{\CaptionFigOne}
   \label{fig:arch}
+
+  \noindent Fig.~\ref{fig:arch} shows the QoS plane, trust/energy context plane, Multi-Criteria Score (MCS) computation, and integration with the objective function. Module boundaries match the Cooja firmware tree.
 \end{figure}
 
 \subsection{Design principles}
@@ -35,6 +37,7 @@ Each router hosts three cooperating \emph{functional planes} coordinated by a li
 Harvesting-specific models (e.g., detailed solar traces) remain configurable hooks in the reference code; the Cooja-based study focuses on reproducible energy \emph{proxies} rather than on uncontrolled outdoor campaigns.
 
 \subsection{Path levels and traffic-class mapping}
+\label{sec:arch-pathlevels}
 To operationalize service differentiation without rewriting MAC schedulers, AER-MQoS maps each traffic class to one of four abstract path levels (levels~1--4, with level~1 being the most protected). The mapping is deterministic in the reference implementation (\texttt{aer\_rpl\_plus\_choose\_path\_level}): $C3\!\rightarrow\!1$, $C2\!\rightarrow\!2$, $C1\!\rightarrow\!3$, $C0\!\rightarrow\!4$. In the evaluated tree, this value is threaded through the application and UDP payload for tracing and class-consistent context updates; it is not consumed inside \texttt{rpl-of-aer-plus.c} for parent exploration, so the levels should be read as an application-visible contract rather than as an additional RPL control-plane knob unless a future revision wires them into the OF.
 
 \begin{figure}[tp]
@@ -42,6 +45,8 @@ To operationalize service differentiation without rewriting MAC schedulers, AER-
   \includegraphics[width=\linewidth]{Fig_2_DODAG_Path_Levels}
   \caption{\CaptionFigTwo}
   \label{fig:dodag-levels}
+
+  \noindent Fig.~\ref{fig:dodag-levels} shows an illustrative RPL DODAG (not the 25-node Cooja layout). DIO (down), DAO (up), preferred parent path to the sink/LBR. Class-to-level mapping $C3{\rightarrow}1,\ldots,C0{\rightarrow}4$ is in Section~\ref{sec:arch-pathlevels}.
 \end{figure}
 
 \subsection{Context fusion and the \texorpdfstring{$(\alpha,\beta,\gamma)$}{alpha/beta/gamma} model}
@@ -52,6 +57,8 @@ AER-MQoS couples domain knowledge and traffic urgency through two nonnegative we
   \includegraphics[width=0.88\linewidth]{Fig_3_Context_Weights_Alpha_Beta_Gamma}
   \caption{\CaptionFigThree}
   \label{fig:context-weights}
+
+  \noindent Fig.~\ref{fig:context-weights} plots the per-class MCS weights ($\alpha,\beta$) used to balance QoS and energy terms in (3).
 \end{figure}
 
 \subsection{Multi-Criteria Score (MCS)}

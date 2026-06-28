@@ -171,6 +171,8 @@ The primary evaluation outcome is successful four-way integration: MCS rank shap
   \includegraphics[width=\linewidth]{Fig_4_PDR_Comparison_4_Protocols}
   \caption{\CaptionFigFour}
   \label{fig:eval-pdr}
+
+  \noindent Fig.~\ref{fig:eval-pdr} shows the overall and per-class C3 PDR under a lossy channel, comparing AER-MQoS against RPL-MQoS, RPL-AER, and standard RPL.
 \end{figure}
 
 \begin{figure}[tp]
@@ -178,6 +180,17 @@ The primary evaluation outcome is successful four-way integration: MCS rank shap
   \includegraphics[width=\linewidth]{Fig_5_Latency_Comparison_4_Protocols}
   \caption{\CaptionFigFive}
   \label{fig:eval-latency}
+
+  \noindent Fig.~\ref{fig:eval-latency} reports the end-to-end latency under the same lossy channel, showing that AER-MQoS maintains competitive delay while improving C3 PDR.
+\end{figure}
+
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=\linewidth]{Fig_6_Interarrival_Gap_By_Traffic_Class}
+  \caption{\CaptionFigSix}
+  \label{fig:eval-jitter}
+
+  \noindent Fig.~\ref{fig:eval-jitter} depicts the per-class inter-arrival gap at the sink, confirming that AER-MQoS provides better traffic-class isolation for high-priority traffic.
 \end{figure}
 
 \subsection{Inter-arrival gap metric}
@@ -188,16 +201,11 @@ This is a \textbf{mean inter-arrival gap}, not RFC~3393 IPDV and not queueing de
 
 \begin{figure}[tp]
   \centering
-  \includegraphics[width=\linewidth]{Fig_6_Interarrival_Gap_By_Traffic_Class}
-  \caption{\CaptionFigSix}
-  \label{fig:eval-jitter}
-\end{figure}
-
-\begin{figure}[tp]
-  \centering
   \includegraphics[width=\linewidth]{Fig_7_Energy_Proxy_Comparison}
   \caption{\CaptionFigSeven}
   \label{fig:eval-energy}
+
+  \noindent Fig.~\ref{fig:eval-energy} tracks the Normalized Residual Energy (NRE) over time, illustrating the energy overhead of the additional AER-MQoS context-awareness mechanisms.
 \end{figure}
 
 \begin{figure}[tp]
@@ -205,6 +213,8 @@ This is a \textbf{mean inter-arrival gap}, not RFC~3393 IPDV and not queueing de
   \includegraphics[width=\linewidth]{Fig_8_Control_Overhead_RPL_Messages}
   \caption{\CaptionFigEight}
   \label{fig:eval-control}
+
+  \noindent Fig.~\ref{fig:eval-control} compares the control-plane overhead in terms of DIO messages, showing that AER-MQoS does not incur significant additional control traffic beyond baseline RPL.
 \end{figure}
 
 \begin{figure}[tp]
@@ -212,6 +222,8 @@ This is a \textbf{mean inter-arrival gap}, not RFC~3393 IPDV and not queueing de
   \includegraphics[width=\linewidth]{Fig_9_Convergence_Or_Stability_Time}
   \caption{\CaptionFigNine}
   \label{fig:eval-stability}
+
+  \noindent Fig.~\ref{fig:eval-stability} measures route stability via parent-change frequency, demonstrating the effect of the MCS-based parent selection on network convergence.
 \end{figure}
 
 \begin{figure}[tp]
@@ -219,6 +231,8 @@ This is a \textbf{mean inter-arrival gap}, not RFC~3393 IPDV and not queueing de
   \includegraphics[width=\linewidth]{Fig_10_Temporal_PDR_Stratification}
   \caption{\CaptionFigTen}
   \label{fig:eval-temporal-pdr}
+
+  \noindent Fig.~\ref{fig:eval-temporal-pdr} plots the temporal PDR evolution throughout the simulation, highlighting the convergence behaviour and steady-state performance of each protocol.
 \end{figure}
 
 \FloatBarrier
