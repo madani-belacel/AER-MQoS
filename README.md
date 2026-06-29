@@ -2,24 +2,33 @@
 
 **Adaptive Energy-aware Multi-Objective QoS Routing for RPL in Low-Power IoT Networks**
 
-**Version Officielle : v1.0** (corrigée)
+**Version Officielle : v1.1** (corrigée et nettoyée)
 
-Télécharger AER-MQoS_v1.0.zip  (https://github.com/madani-belacel/AER-MQoS/releases/tag/v1.0)
+[📦 Télécharger AER-MQoS_v1.1.zip](https://github.com/madani-belacel/AER-MQoS/releases/tag/v1.1)
 
 ---
 
 ## Data Availability
 
-Le code source, les scénarios de simulation Cooja, et les jeux de données mesurés (N=4 seeds) sont disponibles dans ce dépôt GitHub.
+Le code source, les scénarios de simulation Cooja et les données mesurées utilisées dans l'étude sont disponibles dans ce dépôt.
 
-**Version recommandée** : `AER-MQoS_v1.0.zip` (contient la version finale corrigée).
+**Version recommandée** : `AER-MQoS_v1.1.zip` (contient le code source, simulations et données nécessaires à la reproduction).
 
----
-
-## Contenu du dépôt
-
-- `code_source_AER_MQoS/` : Code source du firmware Contiki-NG
+## Structure principale
+- `code_source_AER_MQoS/` : Firmware Contiki-NG
 - `simulations/` : Scénarios Cooja et scripts
-- `AER-MQoS_v1.0.zip` : Archive complète et corrigée (recommandée pour la reproduction)
+- `sim/` : Données mesurées (multi-seed)
 
-Ce dépôt contient tout le nécessaire pour reproduire les figures et tableaux de l'article.
+Voir `simulations/README_CAMPAIGNS.md` et `sim/DATA_PROVENANCE.md` pour les instructions de reproduction.
+
+## Citation
+
+```bibtex
+@misc{belacel2026aermqos,
+  author       = {Belacel, Madani},
+  title        = {AER-MQoS v1.1: Replication Package},
+  year         = {2026},
+  publisher    = {GitHub},
+  url          = {https://github.com/madani-belacel/AER-MQoS}
+}
+Ce projet est sous licence MIT.
