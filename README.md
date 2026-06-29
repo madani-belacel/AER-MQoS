@@ -31,7 +31,6 @@ AER-MQoS/
 ├── INSTALL.md                # Full reproduction instructions
 ├── README.md                 # (this file)
 └── LICENSE
-text## How to Reproduce
 
 Please refer to [`INSTALL.md`](INSTALL.md) for detailed instructions:
 - Firmware compilation
